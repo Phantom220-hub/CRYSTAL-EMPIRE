@@ -35,11 +35,6 @@ local function spawnNode(position, crystalInfo)
     prompt.RequiresLineOfSight = false
     prompt.Parent = node
 
-    prompt.Triggered:Connect(function(player)
-        local remotes = ReplicatedStorage:FindFirstChild("Remotes")
-        local mineEvent = remotes and remotes:FindFirstChild("MineCrystal")
-        if mineEvent then mineEvent:FireServer() end
-    end)
 
     return node
 end
