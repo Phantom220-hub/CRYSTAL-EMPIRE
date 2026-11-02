@@ -1,0 +1,28 @@
+name: Build Crystal Empire
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Foreman
+        uses: rojo-rbx/setup-foreman@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install project tools
+        run: foreman install
+      - name: Build Roblox place
+        run: rojo build default.project.json -o CrystalEmpire.rbxlx
+      - name: Upload place artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrystalEmpire-place
+          path: CrystalEmpire.rbxlx
+          if-no-files-found: error
