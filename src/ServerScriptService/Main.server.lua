@@ -63,7 +63,11 @@ end
 
 local function mineNode(player, node)
     local data = DataService.Get(player)
-    if not data or not node or not node:IsDescendantOf(workspace:FindFirstChild("CrystalEmpireWorld")) then return end
+    local world = workspace:FindFirstChild("CrystalEmpireWorld")
+    if not data or not node or not world or not node:IsDescendantOf(world) then return end
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if not root or (root.Position - node.Position).Magnitude > 16 then return end
     local now = os.clock()
     if lastMine[player] and now - lastMine[player] < 0.35 then return end
     lastMine[player] = now
@@ -99,6 +103,19 @@ local function mineNode(player, node)
 
     updateLeaderstats(player)
     sync(player)
+end
+
+local worldFolder = workspace:FindFirstChild("CrystalEmpireWorld")
+local crystalFolder = worldFolder and worldFolder:FindFirstChild("CrystalNodes")
+if crystalFolder then
+    for _, node in ipairs(crystalFolder:GetChildren()) do
+        local prompt = node:FindFirstChildOfClass("ProximityPrompt")
+        if prompt then
+            prompt.Triggered:Connect(function(player)
+                mineNode(player, node)
+            end)
+        end
+    end
 end
 
 mineRequest.OnServerEvent:Connect(function(player, node)
