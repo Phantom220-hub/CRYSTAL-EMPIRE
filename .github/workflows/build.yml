@@ -12,12 +12,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Foreman
-        uses: rojo-rbx/setup-foreman@v1
+      - name: Install Rojo
+        uses: rojo-rbx/setup-rojo@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install project tools
-        run: foreman install
+          version: "7.5.1"
       - name: Build Roblox place
         run: rojo build default.project.json -o CrystalEmpire.rbxlx
       - name: Upload place artifact
